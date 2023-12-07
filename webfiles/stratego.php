@@ -6,7 +6,8 @@ require_once "../library/game.php";
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 $input = json_decode(file_get_contents('php://input'),true);
-
+echo "gamhstra";
+exit;
 
 switch ($r=array_shift($request)) 
 {
