@@ -1,15 +1,12 @@
 <?php
-//require_once "../library/dbconnect.php";
-//require_once "../library/board.php";
+require_once "../library/dbconnect.php";
+require_once "../library/board.php";
 //require_once "../library/game.php";
 
 $method = $_SERVER['REQUEST_METHOD'];
-//$request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
-$request = explode('/', trim($_SERVER['SCRIPT_NAME'],'/'));
+$request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 $input = json_decode(file_get_contents('php://input'),true);
 
-print_r($_SERVER);
-exit;
 
 switch ($r=array_shift($request)) 
 {
