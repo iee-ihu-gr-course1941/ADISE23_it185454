@@ -1,7 +1,7 @@
 <?php
 require_once "../library/dbconnect.php";
 require_once "../library/board.php";
-//require_once "../library/game.php";
+require_once "../library/game.php";
 
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
@@ -30,6 +30,8 @@ switch ($r=array_shift($request))
 		}
 		break;
 	case 'player': handle_player($method, $request[0],$input);
+		break;
+	case 'players': handle_player($method, $request,$input);
 		break;
 	default: header("HTTP/1.1 404 Not Found");
 		exit;
@@ -63,7 +65,14 @@ function handle_player($method, $p, $input)
 
 function handle_status($method)
 {
-	;
+	if($method=='GET')
+	{
+		show_status();
+	}
+	else
+	{
+		header('HTTP/1.1 405 Method Not Allowed');
+	}
 }
 
 ?>
