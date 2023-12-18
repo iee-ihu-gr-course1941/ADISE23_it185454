@@ -15,6 +15,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Dumping structure for πίνακας stratego.board
+DROP TABLE IF EXISTS `board`;
 CREATE TABLE IF NOT EXISTS `board` (
   `x` tinyint(1) NOT NULL,
   `y` tinyint(1) NOT NULL,
@@ -128,6 +129,7 @@ INSERT INTO `board` (`x`, `y`, `b_color`, `piece_color`, `piece`) VALUES
 	(10, 10, 'GN', NULL, NULL);
 
 -- Dumping structure for πίνακας stratego.board_start
+DROP TABLE IF EXISTS `board_start`;
 CREATE TABLE IF NOT EXISTS `board_start` (
   `x` tinyint(1) NOT NULL,
   `y` tinyint(1) NOT NULL,
@@ -241,6 +243,7 @@ INSERT INTO `board_start` (`x`, `y`, `b_color`, `piece_color`, `piece`) VALUES
 	(10, 10, 'GN', NULL, NULL);
 
 -- Dumping structure for procedure stratego.clean_board
+DROP PROCEDURE IF EXISTS `clean_board`;
 DELIMITER //
 CREATE PROCEDURE `clean_board`()
 BEGIN
@@ -249,6 +252,7 @@ END//
 DELIMITER ;
 
 -- Dumping structure for πίνακας stratego.game_status
+DROP TABLE IF EXISTS `game_status`;
 CREATE TABLE IF NOT EXISTS `game_status` (
   `status` enum('not active','initialized','piece_positioning','started','ended','aborded') NOT NULL DEFAULT 'not active',
   `p_turn` enum('B','R') DEFAULT NULL,
@@ -256,9 +260,12 @@ CREATE TABLE IF NOT EXISTS `game_status` (
   `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table stratego.game_status: ~0 rows (approximately)
+-- Dumping data for table stratego.game_status: ~1 rows (approximately)
+INSERT INTO `game_status` (`status`, `p_turn`, `result`, `last_change`) VALUES
+	('not active', NULL, NULL, '2023-12-18 14:44:28');
 
 -- Dumping structure for procedure stratego.move_piece
+DROP PROCEDURE IF EXISTS `move_piece`;
 DELIMITER //
 CREATE PROCEDURE `move_piece`(
 	IN `x1` TINYINT,
@@ -280,6 +287,7 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure stratego.place_piece
+DROP PROCEDURE IF EXISTS `place_piece`;
 DELIMITER //
 CREATE PROCEDURE `place_piece`(
 	IN `x1` TINYINT,
@@ -311,15 +319,22 @@ END//
 DELIMITER ;
 
 -- Dumping structure for πίνακας stratego.players
+DROP TABLE IF EXISTS `players`;
 CREATE TABLE IF NOT EXISTS `players` (
   `username` varchar(20) DEFAULT NULL,
   `piece_color` enum('B','R') NOT NULL,
+  `token` varchar(32) DEFAULT NULL,
+  `last_action` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`piece_color`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table stratego.players: ~0 rows (approximately)
+-- Dumping data for table stratego.players: ~2 rows (approximately)
+INSERT INTO `players` (`username`, `piece_color`, `token`, `last_action`) VALUES
+	(NULL, 'B', NULL, '2023-12-18 14:44:03'),
+	(NULL, 'R', NULL, '2023-12-18 14:43:15');
 
 -- Dumping structure for trigger stratego.game_status_update
+DROP TRIGGER IF EXISTS `game_status_update`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
 CREATE TRIGGER `game_status_update` BEFORE UPDATE ON `game_status` FOR EACH ROW BEGIN

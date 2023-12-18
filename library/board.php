@@ -2,7 +2,7 @@
 function show_board() {
 	global $mysqli;
 	
-	$sql = 'SELECT * FROM BOARD';
+	$sql = 'SELECT * FROM board';
 	$st = $mysqli->prepare($sql);
 	
 	$st->execute();

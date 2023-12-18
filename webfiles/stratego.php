@@ -2,6 +2,7 @@
 require_once "../library/dbconnect.php";
 require_once "../library/board.php";
 require_once "../library/game.php";
+require_once "../library/users.php";
 
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
@@ -29,9 +30,7 @@ switch ($r=array_shift($request))
 			header("HTTP/1.1 404 Not Found");
 		}
 		break;
-	case 'player': handle_player($method, $request[0],$input);
-		break;
-	case 'players': handle_player($method, $request,$input);
+	case 'players': handle_player($method, $request, $input);
 		break;
 	default: header("HTTP/1.1 404 Not Found");
 		exit;
@@ -60,8 +59,29 @@ function handle_piece($method, $x, $y, $input)
 
 function handle_player($method, $p, $input)
 {
-	;
+	switch($b=array_shift($p))
+	{
+		case null: 
+				if($method=='GET')
+				{
+					show_users($method);
+				}
+				else
+				{
+					header("HTTP/1.1 400 Bad Request");
+					print json_encode(['errormesg'=>"Mathod $method not allowed here."]);
+				}
+			break;				
+		case 'B': handle_user($method,$b,$input);
+			break;
+		case 'R': handle_user($method,$b,$input);
+			break;
+		default: header("HTTP/1.1 404 Not Found");
+			print json_encode(['errormesg'=>"Players $b not found."]);
+			break;
+	}
 }
+
 
 function handle_status($method)
 {
