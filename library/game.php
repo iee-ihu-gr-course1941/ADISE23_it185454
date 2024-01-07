@@ -123,6 +123,17 @@ function read_status()
 	return($status);
 }
 
+function load_init_status()
+{
+	global $mysqli;
+	$new_status = 'started';
+	$new_turn = 'R';
+	$sql = 'UPDATE game_status SET status=?, p_turn=?';
+	$st = $mysqli->prepare($sql);
+	$st->bind_param('ss',$new_status,$new_turn);
+	$st->execute();
+}
+
 function end_game()
 {
 	print json_encode("The game is about to end..\r\n");

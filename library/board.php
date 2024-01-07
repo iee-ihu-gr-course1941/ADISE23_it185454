@@ -26,7 +26,9 @@ function load_init_board()
 	global $mysqli;
 	$sql = 'CALL fill_board()';
 	$mysqli->query($sql);
+	load_init_status();
 	show_board();
+	print json_encode(read_status(), JSON_PRETTY_PRINT);
 }
 
 function read_board()
