@@ -25,6 +25,16 @@ function show_user($b)
 	
 }
 
+function read_users()
+{
+	global $mysqli;
+	$sql = 'SELECT * FROM players';
+	$st = $mysqli -> prepare($sql);
+	$st -> execute();
+	$res = $st -> get_result();
+	return($res -> fetch_all(MYSQLI_ASSOC));
+}
+
 function set_user($b,$input)
 { 
 	if(!isset($input['username']) || $input['username']==' ')
@@ -53,6 +63,7 @@ function set_user($b,$input)
 	$st2->execute();
 	
 	update_game_status();
+	
 	$sql = 'SELECT * FROM players WHERE piece_color=?';
 	$st = $mysqli->prepare($sql);
 	$st->bind_param('s',$b);
@@ -78,7 +89,23 @@ function handle_user($method,$b,$input)
 	}
 }
 	
-
-
+function current_color($token)
+{
+	global $mysqli;
+	if($token == null)
+	{
+		return(null);
+	}
+	$sql = 'SELECT * FROM players WHERE token=?';
+	$st = $mysqli -> prepare($sql);
+	$st -> bind_param('s',$token);
+	$st -> execute();
+	$res = $st -> get_result();
+	if($row = $res -> fetch_assoc())
+	{
+		return($row['piece_color']);
+	}
+	return(null);
+}
 
 ?>
