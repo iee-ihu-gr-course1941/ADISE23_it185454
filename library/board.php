@@ -100,8 +100,9 @@ function set_piece($x,$y,$pcolor,$p,$token)
 		print json_encode(['errormesg'=>"!!!! The $color player is ONLY allowed to place his/hers pieces in lines 7-10 !!!!"]);
 		exit;
 	}
-	print json_encode([$board[$x][$y]['piece_color']]);
+	
 	$board = read_board();
+	print json_encode([$board[$x][$y]['piece_color']]);
 	if($board[$x][$y]['piece_color'] != null || $board[$x][$y]['piece'] != null)
 	{
 		header("HTTP/1.1 400 Bad Request");
