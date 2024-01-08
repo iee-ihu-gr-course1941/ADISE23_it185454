@@ -38,7 +38,8 @@ function read_board()
 	$st = $mysqli -> prepare($sql);
 	$st -> execute();
 	$res = $st -> get_result();
-	return($res -> fetch_all(MYSQLI_ASSOC));
+	$board = $res -> fetch_assoc();
+	return($board);
 }
 
 function show_piece($x,$y)
