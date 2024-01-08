@@ -100,7 +100,7 @@ function set_piece($x,$y,$pcolor,$p,$token)
 		print json_encode(['errormesg'=>"!!!! The $color player is ONLY allowed to place his/hers pieces in lines 7-10 !!!!"]);
 		exit;
 	}
-	
+	print json_encode([$y]);
 	$board = read_board();
 	if($board[$x][$y]['piece_color'] != null || $board[$x][$y]['piece'] != null)
 	{
