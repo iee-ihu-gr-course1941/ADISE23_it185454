@@ -38,8 +38,7 @@ function read_board()
 	$st = $mysqli -> prepare($sql);
 	$st -> execute();
 	$res = $st -> get_result();
-	$board = $res -> fetch_assoc();
-	return($board);
+	return($res -> fetch_all(MYSQLI_ASSOC));
 }
 
 function show_piece($x,$y)
@@ -102,8 +101,23 @@ function set_piece($x,$y,$pcolor,$p,$token)
 		exit;
 	}
 	
-	$board = read_board();
-	print json_encode([$board[$x][$y]['piece_color']]);
+	if($x > 11 || $y > 11)
+	{
+		header("HTTP/1.1 400 Bad Request");
+		print json_encode(['errormesg'=>"!!!! The value of x or y is outside the board !!!!"]);
+		exit;
+	}
+	
+	if($x < 1 || $y < 1)
+	{
+		header("HTTP/1.1 400 Bad Request");
+		print json_encode(['errormesg'=>"!!!! The value of x or y is outside the board !!!!"]);
+		exit;
+	}
+	
+	$orig_board = read_board();
+	$board = convert_board($orig_board);
+	
 	if($board[$x][$y]['piece_color'] != null || $board[$x][$y]['piece'] != null)
 	{
 		header("HTTP/1.1 400 Bad Request");
@@ -274,7 +288,7 @@ function move_piece($x,$y,$x2,$y2,$token)
 	if($status['status'] != 'started')
 	{
 		header("HTTP/1.1 400 Bad Request");
-		print json_encode(['errormesg'=>"Game is not in action."]);
+		print json_encode(['errormesg'=>"Game has not started yet."]);
 		exit;
 	}
 	
@@ -285,15 +299,82 @@ function move_piece($x,$y,$x2,$y2,$token)
 		exit;
 	}
 	
+	if($x > 11 || $y > 11)
+	{
+		header("HTTP/1.1 400 Bad Request");
+		print json_encode(['errormesg'=>"!!!! The value of x or y is outside the board !!!!"]);
+		exit;
+	}
+	
+	if($x < 1 || $y < 1)
+	{
+		header("HTTP/1.1 400 Bad Request");
+		print json_encode(['errormesg'=>"!!!! The value of x or y is outside the board !!!!"]);
+		exit;
+	}
+	
+	if($x2 > 11 || $y2 > 11)
+	{
+		header("HTTP/1.1 400 Bad Request");
+		print json_encode(['errormesg'=>"!!!! The value of x or y is outside the board !!!!"]);
+		exit;
+	}
+	
+	if($x2 < 1 || $y2 < 1)
+	{
+		header("HTTP/1.1 400 Bad Request");
+		print json_encode(['errormesg'=>"!!!! The value of x or y is outside the board !!!!"]);
+		exit;
+	}
+	
 	$orig_board = read_board();
 	$board = convert_board($orig_board);
-	$n = add_valid_moves_to_piece($board,$color,$x,$y);
 	
-	// edw
+	if($board[$x][$y]['piece'] == null)
+	{
+		header("HTTP/1.1 400 Bad Request");
+		print json_encode("You haven't selected a piece.");
+		exit;
+	}
+	
+	if($board[$x2][$y2]['b_color'] == 'GY')
+	{
+		header("HTTP/1.1 400 Bad Request");
+		print json_encode("You cannot jump in the lakes!");
+		exit;
+	}
+	
+	$n = add_valid_moves_to_piece($board,$color,$x,$y);
 	$m = add_valid_moves_to_board($board,$color);
-	print json_encode(['n'=>$n]);
-	print json_encode(['m'=>$m]);
-	//edw
+	
+	if($board[$x][$y]['piece'] == 'B')
+	{
+		header("HTTP/1.1 400 Bad Request");
+		print json_encode("The BOMB piece cannot be moved !!!");
+		exit;
+	}
+	
+	if($board[$x][$y]['piece'] == 'F')
+	{
+		header("HTTP/1.1 400 Bad Request");
+		print json_encode("The FLAG piece cannot be moved !!!");
+		exit;
+	}
+	
+	if($m == 0)
+	{
+		print json_encode(["You have no moves left. YOU LOST THE GAME !!!"]);
+		if ($color = 'R')
+		{
+			$color = 'B';
+		}
+		else
+		{
+			$color = 'R';
+		}
+		update_result($color);
+		exit;
+	}
 	
 	if($n == 0)
 	{
@@ -305,11 +386,16 @@ function move_piece($x,$y,$x2,$y2,$token)
 	foreach($board[$x][$y]['moves'] as $i => $move)
 	{
 		if($x2 == $move['x'] && $y2 == $move['y'])
-		{
-			if($board[$x][$y]['piece'] == $board[$x2][$y2]['piece'])
+		{	
+			if($board[$x2][$y2]['piece'] == null)
+			{
+				do_move($x,$y,$x2,$y2);
+				exit;
+			}
+			else if($board[$x][$y]['piece'] == $board[$x2][$y2]['piece'])
 			{
 				print json_encode("Your piece was the same with the opponent's. You defeat each other.");
-				//attack_on_same_piece($x,$y,$x2,$y2);
+				attack_on_same_piece($x,$y,$x2,$y2);
 				exit;
 			}
 			else if($board[$x][$y]['piece'] < $board[$x2][$y2]['piece'])
@@ -317,26 +403,26 @@ function move_piece($x,$y,$x2,$y2,$token)
 				if($board[$x][$y]['piece'] != '8' && $board[$x2][$y2]['piece'] == 'B')
 				{
 					print json_encode("!!! BOMB !!! You lost your piece.");
-					//attack_on_stronger_piece($x,$y,$x2,$y2);
+					attack_on_stronger_piece($x,$y,$x2,$y2);
 					exit;
 				}
 				else if($board[$x][$y]['piece'] == '8' && $board[$x2][$y2]['piece'] == 'B')
 				{
 					print json_encode("1 BOMB has been defused.");
-					//do_move($x,$y,$x2,$y2);
+					do_move($x,$y,$x2,$y2);
 					exit;
 				}
 				else if($board[$x2][$y2]['piece'] == 'F')
 				{
 					print json_encode("You captured the enemy's FLAG. YOU WON THE GAME !!!");
-					//do_move($x,$y,$x2,$y2);
-					//update_result($color);
+					do_move($x,$y,$x2,$y2);
+					update_result($color);
 					exit;
 				}
 				else
 				{
 					print json_encode("Your piece won the enemy's one.");
-					//do_move($x,$y,$x2,$y2);
+					do_move($x,$y,$x2,$y2);
 					exit;
 				} 
 			}
@@ -345,20 +431,20 @@ function move_piece($x,$y,$x2,$y2,$token)
 				if($board[$x][$y]['piece'] == 'S' && $board[$x2][$y2]['piece'] == '1')
 				{
 					print json_encode("Your SPY has been successfully revealed the MARSHAL's position. Well done, you destroyed it.");
-					//do_move($x,$y,$x2,$y2);
+					do_move($x,$y,$x2,$y2);
 					exit;
 				}
 				else if($board[$x2][$y2]['piece'] == 'F')
 				{
 					print json_encode("You captured the enemy's FLAG. YOU WON THE GAME !!!");
-					//do_move($x,$y,$x2,$y2);
-					//update_result($color);
+					do_move($x,$y,$x2,$y2);
+					update_result($color);
 					exit;
 				}
 				else
 				{
 					print json_encode("You attacked a stronger piece. You lost your piece.");
-					//attack_on_stronger_piece($x,$y,$x2,$y2);
+					attack_on_stronger_piece($x,$y,$x2,$y2);
 					exit;
 				}
 			}
@@ -464,7 +550,6 @@ function add_valid_moves_to_piece(&$board, $b, $x, $y)
 				break;
 			case '9': $number_of_moves += scout_moves($board, $b, $x, $y);
 				break;
-			
 		}
 	}
 	return($number_of_moves);
@@ -473,13 +558,11 @@ function add_valid_moves_to_piece(&$board, $b, $x, $y)
 
 function flag_moves(&$board, $b, $x, $y)
 {
-	print json_encode("The FLAG piece cannot be moved !!!");
 	return(0);
 }
 
 function bomb_moves(&$board, $b, $x, $y)
 {
-	print json_encode("The BOMB piece cannot be moved !!!");
 	return(0);
 }
 
@@ -492,7 +575,7 @@ function spy_moves(&$board, $b, $x, $y)
 	{
 		$x2 = $x + $t[0];
 		$y2 = $y + $t[1];
-		if($x2>=1 && $x2<=10 && $y2>=1 && $y2<=10 && $board[$x2][$y2]['piece_color']!=$b)
+		if($x2>=1 && $x2<=10 && $y2>=1 && $y2<=10 && $board[$x2][$y2]['piece_color']!=$b && $board[$x2][$y2]['b_color']!='GY')
 		{
 			//if the destination cell is inside the board, the cell is not occupied by a piece of the same color and the cell is not grey color (a lake)
 			$move=['x'=>$x2, 'y'=>$y2];
@@ -679,22 +762,29 @@ function scout_moves(&$board, $b, $x, $y)
 	
 	foreach($m as $k=>$t)
 	{
-		for($i=$x+$t[0],$j=$y+$t[1]; $i>=1 && $i<=8 && $j>=1 && $j<=8; $i+=$t[0], $j+=$t[1])
+		for($i=$x+$t[0],$j=$y+$t[1]; $i>=1 && $i<=10 && $j>=1 && $j<=10; $i+=$t[0], $j+=$t[1])
 		{
-			if($board[$i][$j]['piece_color'] == null)
-			{ 
-				$move=['x'=>$i, 'y'=>$j];
-				$moves[]=$move;
-			} 
-			else if($board[$i][$j]['piece_color'] != $b) 
+			if($board[$i][$j]['b_color'] == 'GY')
 			{
-				$move=['x'=>$i, 'y'=>$j];
-				$moves[]=$move;
 				break;
 			}
-			else if($board[$i][$j]['piece_color'] == $b)
+			else
 			{
-				break;
+				if($board[$i][$j]['piece_color'] == null)
+				{ 
+					$move=['x'=>$i, 'y'=>$j];
+					$moves[]=$move;
+				} 
+				else if($board[$i][$j]['piece_color'] != $b) 
+				{
+					$move=['x'=>$i, 'y'=>$j];
+					$moves[]=$move;
+					break;
+				}
+				else if($board[$i][$j]['piece_color'] == $b)
+				{
+					break;
+				}
 			}
 		}
 
