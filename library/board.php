@@ -86,7 +86,6 @@ function set_piece($x,$y,$pcolor,$p,$token)
 		exit;
 	}
 	
-	
 	if($color == 'R' && $x > 4)
 	{
 		header("HTTP/1.1 400 Bad Request");
@@ -505,7 +504,6 @@ function update_result($color)
 	print json_encode(read_status(), JSON_PRETTY_PRINT);
 }
 
-
 function add_valid_moves_to_board(&$board,$b)
 {
 	$number_of_moves = 0;
@@ -554,7 +552,6 @@ function add_valid_moves_to_piece(&$board, $b, $x, $y)
 	}
 	return($number_of_moves);
 }
-
 
 function flag_moves(&$board, $b, $x, $y)
 {
@@ -793,7 +790,6 @@ function scout_moves(&$board, $b, $x, $y)
 	return(sizeof($moves));
 }
 
-
 function convert_board(&$orig_board)
 {
 	$board = [];
@@ -803,5 +799,4 @@ function convert_board(&$orig_board)
 	}
 	return($board);
 }
-
 ?>
