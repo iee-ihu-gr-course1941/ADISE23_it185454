@@ -46,7 +46,7 @@
  * Κάντε clone το project σε κάποιον φάκελο <br/>
   `$ git clone https://github.com/iee-ihu-gr-course1941/ADISE23_it185454.git`
 
- * Βεβαιωθείτε ότι ο φάκελος είναι προσβάσιμος από τον Apache Server. Για να γίνει αυτό αρκεί να μεταβεί στον configuration αρχείο (httpd-xampp.conf) του Apache, μέσα από το XAMPP, και να συμπληρώσει στο τέλος το παρακάτω κείμενο:
+ * Βεβαιωθείτε ότι ο φάκελος είναι προσβάσιμος από τον Apache Server. Για να γίνει αυτό αρκεί να μεταβείτε στο configuration αρχείο (httpd-xampp.conf) του Apache, μέσα από το XAMPP, και να συμπληρωθεί στο τέλος το παρακάτω κείμενο:
 ```
   Alias /stratego "C:/ProjectAdise/ADISE23_it185454/webfiles"
     <Directory "C:/ProjectAdise/ADISE23_it185454/webfiles">
