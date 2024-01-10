@@ -197,7 +197,7 @@ GET /board/
 ```
 curl https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/board
 ```
-Επιστρέφει το [board](#board).
+Επιστρέφει το [board](#board-1).
 
 #### Άδειασμα board
 ```
@@ -207,7 +207,7 @@ POST /board/
 curl -X POST https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/board
 ```
 Αδειάζει το board, δηλαδή το ταμπλό του παιχνιδιού δεν έχει πιόνια. 
-Επιστρέφει το [board](#board).
+Επιστρέφει το [board](#board-1).
 
 #### Αυτοματοποιημένο γέμισμα board
 ```
@@ -217,7 +217,7 @@ PUT /board/
 curl -X PUT https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/board
 ```
 Γεμίζει το board, δηλαδή προστίθονται τα πιόνια σε προεπιλεγμένες θέσεις στο ταμπλό του παιχνιδιού. Αλλάζει η σειρά παιξιάς και η κατάσταση του παιχνιδιού από τοποθέτηση πιονιών ('piece_positioning') σε έναρξη παιχνιδιού ('started').
-Επιστρέφει το [board](#board) και το [game_status](#game_status).
+Επιστρέφει το [board](#board-1) και το [game_status](#game_status).
 
 ### Players
 #### Ανάγνωση στοιχείων players
@@ -227,7 +227,7 @@ GET /players/
 ```
 curl https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/players
 ```
-Επιστρέφει τα στοιχεία των [players](#players) παραλείποντας το στοιχειο 'token' για λόγους ιδιωτικότητας.
+Επιστρέφει τα στοιχεία των [players](#players-1) παραλείποντας το στοιχειο 'token' για λόγους ιδιωτικότητας.
 
 #### Ανάγνωση στοιχείων player
 ```
@@ -241,7 +241,7 @@ curl https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/
 ```
 curl https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/players/B
 ```
-Επιστρέφει τα στοιχεία του [players](#players) p παραλείποντας το στοιχειο 'token' για λόγους ιδιωτικότητας. Το p μπορεί να είναι 'R' ή 'B'.
+Επιστρέφει τα στοιχεία του [players](#players-1) p παραλείποντας το στοιχειο 'token' για λόγους ιδιωτικότητας. Το p μπορεί να είναι 'R' ή 'B'.
 
 #### Καθορισμός στοιχείων player
 ```
@@ -266,7 +266,7 @@ Json Data:
 | `color`           | To χρώμα που επέλεξε ο παίκτης p  | yes        |
 | `username`        | Το username για τον παίκτη p      | yes        |
 
-Επιστρέφει τα στοιχεία του [players](#players) p και ένα token. Το token χρησιμοποιείται για ελέγχους καθόλη τη διάρκεια του παιχνιδιού.
+Επιστρέφει τα στοιχεία του [players](#players-1) p και ένα token. Το token χρησιμοποιείται για ελέγχους καθόλη τη διάρκεια του παιχνιδιού.
 
 ### Piece
 #### Εμφάνιση θέσης πιονιού
@@ -304,7 +304,7 @@ Json Data:
 | `piece`           | Το πιόνι                    | yes        |
 | `token`           | Το token του παίκτη         | yes        |
 
-Επιστρέφει τα στοιχεία από το [board](#board), καθώς έχουν ενημερωθεί λόγω της τοποθέτησης του πιονιού στο ταμπλό.
+Επιστρέφει τα στοιχεία από το [board](#board-1), καθώς έχουν ενημερωθεί λόγω της τοποθέτησης του πιονιού στο ταμπλό.
 
 #### Μεταβολή θέσης πιονιού
 ```
@@ -332,7 +332,7 @@ Json Data:
 4) αν η κίνηση που προσπαθεί να κάνει είναι νόμιμη,
 5) αν έχει επιλέξει πιόνι για μετακίνηση.
    
-Επιστρέφει τα στοιχεία από το [board](#board), καθώς έχουν ενημερωθεί λόγω της μετακίνησης του πιονιού στο ταμπλό.
+Επιστρέφει τα στοιχεία από το [board](#board-1), καθώς έχουν ενημερωθεί λόγω της μετακίνησης του πιονιού στο ταμπλό.
 
 ### Status
 #### Εμφάνιση κατάστασης παιχνιδιού
@@ -352,4 +352,4 @@ POST /exit/
 ```
 curl -X POST https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/exit
 ```
-Επιστρέφει το [board](#board), το [game_status](#game_status) και το [players](#players).
+Επιστρέφει το [board](#board-1), το [game_status](#game_status) και το [players](#players-1).
