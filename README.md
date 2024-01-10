@@ -209,7 +209,7 @@ curl -X POST https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//strat
 Αδειάζει το board, δηλαδή το ταμπλό του παιχνιδιού δεν έχει πιόνια. 
 Επιστρέφει το [board](#board).
 
-### Αυτοματοποιημένο γέμισμα board
+#### Αυτοματοποιημένο γέμισμα board
 ```
 PUT /board/
 ```
