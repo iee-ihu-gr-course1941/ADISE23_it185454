@@ -219,6 +219,7 @@ GET /board/
 ```
 curl https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/board
 ```
+
 Επιστρέφει το [board table](#board-table).
 
 #### Άδειασμα board
@@ -229,6 +230,7 @@ POST /board/
 curl -X POST https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/board
 ```
 Αδειάζει το board, δηλαδή το ταμπλό του παιχνιδιού δεν έχει πιόνια. 
+
 Επιστρέφει το [board table](#board-table).
 
 #### Αυτοματοποιημένο γέμισμα board
@@ -239,6 +241,7 @@ PUT /board/
 curl -X PUT https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/board
 ```
 Γεμίζει το board, δηλαδή προστίθονται τα πιόνια σε προεπιλεγμένες θέσεις στο ταμπλό του παιχνιδιού. Αλλάζει η σειρά παιξιάς και η κατάσταση του παιχνιδιού από τοποθέτηση πιονιών ('piece_positioning') σε έναρξη παιχνιδιού ('started').
+
 Επιστρέφει το [board table](#board-table) και το [game_status table](#game_status-table).
 
 ### Players
@@ -249,6 +252,7 @@ GET /players/
 ```
 curl https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/players
 ```
+
 Επιστρέφει τα στοιχεία των [players table](#players-table) παραλείποντας το στοιχειο 'token' για λόγους ιδιωτικότητας.
 
 #### Ανάγνωση στοιχείων player
@@ -263,6 +267,7 @@ curl https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/
 ```
 curl https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/players/B
 ```
+
 Επιστρέφει τα στοιχεία του [players table](#players-table) p παραλείποντας το στοιχειο 'token' για λόγους ιδιωτικότητας. Το p μπορεί να είναι 'R' ή 'B'.
 
 #### Καθορισμός στοιχείων player
@@ -297,7 +302,8 @@ GET /board/piece/:x/:y/
 ```
 ```
 curl https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/board/piece/{x}/{y}
-``` 
+```
+
 Επιστρέφει τη γραμμή του [board table](#board-table) όπου περιέχει το συγκεκριμένο πιόνι με τις συντεταγμένες x,y που δώθηκαν από τον χρήστη.
 
 #### Τοποθέτηση πιονιού
@@ -353,6 +359,7 @@ Json Data:
 3) αν είναι η σειρά του να παίξει με βάση το token,
 4) αν η κίνηση που προσπαθεί να κάνει είναι νόμιμη,
 5) αν έχει επιλέξει πιόνι για μετακίνηση.
+
    
 Επιστρέφει τα στοιχεία από το [board table](#board-table), καθώς έχουν ενημερωθεί λόγω της μετακίνησης του πιονιού στο ταμπλό.
 
@@ -364,6 +371,7 @@ GET /status/
 ```
 curl https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/status
 ```
+
 Επιστρέφει το [game_status table](#game_status-table).
 
 ### Exit
@@ -374,4 +382,5 @@ POST /exit/
 ```
 curl -X POST https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/exit
 ```
+
 Επιστρέφει το [board table](#board-table), το [game_status table](#game_status-table) και το [players table](#players-table).
