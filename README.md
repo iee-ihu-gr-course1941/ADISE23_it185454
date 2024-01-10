@@ -382,5 +382,6 @@ POST /exit/
 ```
 curl -X POST https://users.iee.ihu.gr/~it185454/ADISE23_it185454/webfiles//stratego.php/exit
 ```
+Αδειάζει τον πίνακα board, δηλαδή αφαιρεί τα πιόνια από το ταμπλό του παιχνιδιού. Ενημερώνει τον πίνακα game_status, δηλαδή αλλάζει την κατάσταση του παιχνιδιού από την έναρξη ('started') σε τέλος παιχνιδιού ('ended'), αλλάζει την παιξιά σε null και ορίζει το αποτέλεσμα του παιχνιδιού ανάλογα με το χρώμα του στρατού που κέρδισε. Ενημερώνει τον πίνακα players, δηλαδή αλλάζει σε null το όνομα χρήστη και το token των δύο παικτών.
 
 Επιστρέφει το [board table](#board-table), το [game_status table](#game_status-table) και το [players table](#players-table).
